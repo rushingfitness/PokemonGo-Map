@@ -2,6 +2,7 @@ var map,
     marker,
     locationMarker,
     lastStamp = 0,
+    mymarker,
     requestInterval = 10000;
 
 var markers = [];
@@ -169,7 +170,7 @@ initMap = function() {
         center: {lat: center_lat, lng: center_lng},
         zoom: 16
     });
-    var marker = new google.maps.Marker({
+    mymarker = new google.maps.Marker({
         position: {lat: center_lat, lng: center_lng},
         map: map,
         animation: google.maps.Animation.DROP
@@ -332,3 +333,24 @@ $('.label-countdown').each(function (index, element) {
 };
 
 window.setInterval(setLabelTime, 1000);
+window.setInterval(getLocation, 1000);
+function getLocation() {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  }
+}
+
+
+function showPosition(position) {
+  var baseURL = location.protocol + "//" + location.hostname + (location.port ? ":"+location.port: "");
+  lat = position.coords.latitude;
+  lon = position.coords.longitude;
+  $.post(baseURL + "/next_loc?lat=" + lat + "&lon=" + lon).done(function(){
+    var center = new google.maps.LatLng(lat, lon);
+    if((google.maps.geometry.spherical.computeDistanceBetween(center, map.getCenter()) / 1000) > 4)
+      map.panTo(center);
+    mymarker.setPosition(center);
+  });
+
+}
+
