@@ -260,7 +260,7 @@ function showPosition(position) {
   var baseURL = location.protocol + "//" + location.hostname + (location.port ? ":"+location.port: "");
   lat = position.coords.latitude;
   lon = position.coords.longitude;
-  $.get(baseURL + "/next_loc?lat=" + lat + "&lon=" + lon).done(function(){
+  $.post(baseURL + "/next_loc?lat=" + lat + "&lon=" + lon).done(function(){
     var center = new google.maps.LatLng(lat, lon);
     if((google.maps.geometry.spherical.computeDistanceBetween(center, map.getCenter()) / 1000) > 4)
       map.panTo(center);
