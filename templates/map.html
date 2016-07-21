@@ -49,13 +49,14 @@
 	</head>
 	<body id="top">
 
-		<!-- Header -->
+
+<!--
+Commenting this out until it gets fixed - it's ugly on the iphone screen.		
 		<header id="header">
 			<a href="#nav">Menu</a>
 			<h1><a href="#">GoMap</a></h1>
 		</header>
 
-		<!-- Nav -->
 		<nav id="nav">
 			<ul class="links">
 				<li><a href="#top">Top</a></li>
@@ -64,9 +65,9 @@
 				<li><a href="#grid">Grid System</a></li>
 			</ul>
 		</nav>
-
+        	<button id="trigger-overlay">Test</button>
+//-->
     <div id="main">
-			<button id="trigger-overlay">Test</button>
       <div id="map"></div>
     </div>
 
@@ -92,6 +93,7 @@
     var center_lat = {{lat}};
     var center_lng = {{lng}};
   </script>
+
 
   <script type="text/javascript" src="/static/map.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ gmaps_key }}&callback=initMap"></script>

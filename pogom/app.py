@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import calendar
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from flask.json import JSONEncoder
 from datetime import datetime
 
@@ -19,6 +19,7 @@ class Pogom(Flask):
         self.route("/gyms/<stamp>", methods=['GET'])(self.gyms)
         self.route("/pokestops/<stamp>", methods=['GET'])(self.pokestops)
         self.route("/raw_data", methods=['GET'])(self.raw_data)
+        self.route("/rehome_location", methods=['GET'])(self.rehome_location)
 
     def fullmap(self):
         return render_template('map.html',
@@ -45,6 +46,16 @@ class Pogom(Flask):
     def gyms(self, stamp):
         return jsonify(self.get_raw_data(stamp)['gyms'])
 
+    def rehome_location(self):
+        lat = request.args.get('lat', '')
+        lon = request.args.get('lon', '')
+        if not (lat and lon):
+            print('[-] not rehoming - invalid: %s,%s' % (lat, lon))
+        else:
+            print('[+] rehoming to %s,%s' % (lat, lon))            
+            config['ORIGINAL_LATITUDE'] = float(lat)
+            config['ORIGINAL_LONGITUDE'] = float(lon)
+        return 'OK'
 
 
 
