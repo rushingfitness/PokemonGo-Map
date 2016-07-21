@@ -20,7 +20,7 @@ class Pogom(Flask):
         self.route("/gyms", methods=['GET'])(self.gyms)
         self.route("/pokestops", methods=['GET'])(self.pokestops)
         self.route("/raw_data", methods=['GET'])(self.raw_data)
-        self.route("/rehome_location", methods=['GET'])(self.rehome_location)
+        self.route("/next_loc", methods=['GET','POST'])(self.next_loc)
 
     def fullmap(self):
         return render_template('map.html',
@@ -50,17 +50,16 @@ class Pogom(Flask):
     def gyms(self):
         return jsonify(self.get_raw_data(None)['gyms'])
 
-    def rehome_location(self):
-        lat = request.args.get('lat', '')
-        lon = request.args.get('lon', '')
+    def next_loc(self):
+        lat = request.args.get('lat', type=float)
+        lon = request.args.get('lon', type=float)
         if not (lat and lon):
-            print('[-] not rehoming - invalid: %s,%s' % (lat, lon))
+            print('[-] Invalid next location: %s,%s' % (lat, lon))
+            return 'bad parameters', 400
         else:
-            print('[+] rehoming to %s,%s' % (lat, lon))            
-            config['ORIGINAL_LATITUDE'] = float(lat)
-            config['ORIGINAL_LONGITUDE'] = float(lon)
-        return 'OK'
-
+            config['ORIGINAL_LATITUDE'] = lat
+            config['ORIGINAL_LONGITUDE'] = lon
+            return 'ok'
 
 
 class CustomJSONEncoder(JSONEncoder):
