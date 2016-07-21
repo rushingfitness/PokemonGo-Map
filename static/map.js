@@ -248,7 +248,7 @@ $('.label-countdown').each(function (index, element) {
 };
 
 window.setInterval(setLabelTime, 1000);
-window.setInterval(getLocation, 20000);
+window.setInterval(getLocation, 1000);
 function getLocation() {
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
@@ -262,7 +262,8 @@ function showPosition(position) {
   lon = position.coords.longitude;
   $.get(baseURL + "/rehome_location?lat=" + lat + "&lon=" + lon).done(function(){
     var center = new google.maps.LatLng(lat, lon);
-    map.panTo(center);
+    if((google.maps.geometry.spherical.computeDistanceBetween(center, map.getCenter()) / 1000) > 4)
+      map.panTo(center);
     mymarker.setPosition(center);
   });
 
